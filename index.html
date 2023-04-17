@@ -30,15 +30,18 @@
     Insert food description here
   </p>
 
-  <!-- New Food Form -->
-  <form id="new-food">
-    <h4>Add New Food</h4>
+  <!-- Update Food Form -->
+  <form id="update-food-form">
+    <h4>Update a Food</h4>
+    <select id="food-id">
+      <!-- Option Elements here -->
+    </select>
     <label for="name">Name: </label>
-    <input type="text" name="name" id="new-name" required/>
+    <input type="text" name="name" id="new-name"/>
     <label for="image">Image: </label>
-    <input type="text" name="image" id="new-image" required/>
+    <input type="text" name="image" id="new-image"/>
     <label for="description">Description: </label>
-    <textarea name="description" id="new-description" required></textarea>
+    <textarea name="description" id="new-description"></textarea>
     <input type="submit" value="Create" />
   </form>
 
