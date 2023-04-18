@@ -1,11 +1,11 @@
-const foodIDElement = document.getElementById('food-id')
+const foodIdElement = document.getElementById('food-id')
 
 fetch("http://localhost:3000/foods")
 .then(response => response.json())
 .then(foods => {
     foods.forEach(food => {
-        addFoodImageToMenu(foods, food)
-        createOptionElement(food)
+        addFoodImageToMenu(food)
+        addOptionElement(food)
     })
 })
 
@@ -15,7 +15,7 @@ fetch("http://localhost:3000/foods/1")
     displayFoodDetails(food)
 })
 
-function addFoodImageToMenu(foods, food){
+function addFoodImageToMenu(food){
     const restaurantMenu = document.getElementById('restaurant-menu')
     const foodDiv = document.createElement('div')
     const foodImage = document.createElement('img')
@@ -26,19 +26,14 @@ function addFoodImageToMenu(foods, food){
     const deleteButton = document.createElement('button')
     deleteButton.textContent = "DELETE"
     deleteButton.addEventListener('click', () => {
+        // DELETE request
         fetch(`http://localhost:3000/foods/${food.id}`, {
             method: "DELETE"
         })
-        .then(() => {
-            foods = foods.filter(f => {
-                return f.id !== food.id
-            })
-        })
+        alert(`Food #${food.id}: ${food.name} deleted!`)
     })
-    foodDiv.appendChild(foodImage)
-    foodDiv.appendChild(deleteButton)
+    foodDiv.append(foodImage, deleteButton)
     restaurantMenu.appendChild(foodDiv)
-
 }
 
 function displayFoodDetails(food){
@@ -52,32 +47,27 @@ function displayFoodDetails(food){
     foodDescription.textContent = food.description
 }
 
-function createOptionElement(food){
+function addOptionElement(food){
     const optionElement = document.createElement('option')
     optionElement.value = food.id
     optionElement.textContent = `${food.id}: ${food.name}`
-    foodIDElement.appendChild(optionElement)
+    foodIdElement.appendChild(optionElement)
 }
-
-// Start coding here
-// foodIDElement.addEventListener('change', (event) => {
-//     console.log(event.target.value)
-// })
 
 const updateFoodForm = document.getElementById('update-food-form')
 updateFoodForm.addEventListener('submit', (event) => {
     event.preventDefault()
-    
     const foodNameValue = document.getElementById('new-name').value
-    const foodImageValue = document.getElementById('new-image').value
+    const foodImageLinkValue = document.getElementById('new-image').value
     const foodDescriptionValue = document.getElementById('new-description').value
 
     let updatedFood = {}
+
     if(foodNameValue !== ""){
         updatedFood = {...updatedFood, name: foodNameValue}
     }
-    if(foodImageValue !== ""){
-        updatedFood = {...updatedFood, image: foodImageValue}
+    if(foodImageLinkValue !== ""){
+        updatedFood = {...updatedFood, image: foodImageLinkValue}
     }
     if(foodDescriptionValue !== ""){
         updatedFood = {...updatedFood, description: foodDescriptionValue}
@@ -87,8 +77,10 @@ updateFoodForm.addEventListener('submit', (event) => {
     for(key in updatedFood){
         counter++
     }
+
     if(counter > 0){
-        fetch(`http://localhost:3000/foods/${foodIDElement.value}`, {
+        // PATCH request
+        fetch(`http://localhost:3000/foods/${foodIdElement.value}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -96,8 +88,10 @@ updateFoodForm.addEventListener('submit', (event) => {
             },
             body: JSON.stringify(updatedFood)
         })
+
+        alert("Content updated!")
     }
     else{
-        alert("There is nothing to update. Please enter some values.")
+        alert("There is nothing to update. Please enter some information to update.")
     }
 })
